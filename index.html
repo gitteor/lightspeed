@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Solar System</title>
+    <title>3D Earth</title>
     <style>
         body { margin: 0; overflow: hidden; }
         canvas { display: block; }
     </style>
 </head>
 <body>
-    <!-- Three.js를 CDN에서 불러오기 -->
+    <!-- Three.js와 OrbitControls.js를 CDN에서 불러오기 -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.137.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/controls/OrbitControls.js"></script>
     <script>
         let scene = new THREE.Scene();
         let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -19,46 +20,33 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // 조명 추가
-        let light = new THREE.PointLight(0xffffff, 1.2);
-        light.position.set(0, 0, 10);
-        scene.add(light);
-
-        let ambientLight = new THREE.AmbientLight(0x404040);
-        scene.add(ambientLight);
-
-        // 텍스처 로더 설정
+        // 지구 텍스처 로드
         let loader = new THREE.TextureLoader();
-
-        // 지구 생성
         loader.load('https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg', function(texture) {
             let geometry = new THREE.SphereGeometry(1, 32, 32);
-            let material = new THREE.MeshPhongMaterial({ map: texture });
+            let material = new THREE.MeshBasicMaterial({ map: texture });
             let earth = new THREE.Mesh(geometry, material);
-            earth.position.x = -2;
             scene.add(earth);
         });
 
-        // 태양 생성
-        loader.load('https://threejs.org/examples/textures/planets/2k_sun.jpg', function(texture) {
-            let geometry = new THREE.SphereGeometry(2, 32, 32);
-            let material = new THREE.MeshBasicMaterial({ map: texture });
-            let sun = new THREE.Mesh(geometry, material);
-            sun.position.x = 3;
-            scene.add(sun);
-        });
-
         // 카메라 위치 조정
-        camera.position.z = 5;
+        camera.position.z = 3;
 
-        // 렌더링 함수
-        function animate() {
-            requestAnimationFrame(animate);
+        // OrbitControls 활성화
+        let controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.rotateSpeed = 0.7;
+
+        // 렌더링 함수 정의
+        function render() {
+            requestAnimationFrame(render);
+            controls.update();
             renderer.render(scene, camera);
         }
 
-        // 애니메이션 시작
-        animate();
+        // 렌더링 시작
+        render();
     </script>
 </body>
 </html>
