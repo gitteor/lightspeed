@@ -1,36 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Simple 3D Solar System</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rotating Sphere</title>
     <style>
-        body { margin: 0; }
+        body { margin: 0; overflow: hidden; }
         canvas { display: block; }
     </style>
 </head>
 <body>
-    <script src="https://threejs.org/build/three.js"></script>
+    <!-- Three.js를 CDN에서 불러오기 -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.137.0/build/three.min.js"></script>
     <script>
-        var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-        var renderer = new THREE.WebGLRenderer();
+        // 기본 씬, 카메라, 렌더러 설정
+        let scene = new THREE.Scene();
+        let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        let renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Create spheres representing planets
-        var geometry = new THREE.SphereGeometry(1, 32, 32);
-        var material = new THREE.MeshBasicMaterial({color: 0x00ff00});
-        var sphere = new THREE.Mesh(geometry, material);
+        // 구(스피어) 생성
+        let geometry = new THREE.SphereGeometry(1, 32, 32);
+        let material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+        let sphere = new THREE.Mesh(geometry, material);
         scene.add(sphere);
 
+        // 카메라 위치 조정
         camera.position.z = 5;
 
-        var animate = function () {
+        // 애니메이션 함수 정의
+        function animate() {
             requestAnimationFrame(animate);
+
+            // 구 회전
             sphere.rotation.x += 0.01;
             sphere.rotation.y += 0.01;
-            renderer.render(scene, camera);
-        };
 
+            // 렌더링
+            renderer.render(scene, camera);
+        }
+
+        // 애니메이션 시작
         animate();
     </script>
 </body>
