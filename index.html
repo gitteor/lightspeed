@@ -31,11 +31,11 @@
         });
 
         // 빛 구체 생성
-        let lightSphereGeometry = new THREE.SphereGeometry(0.1, 8, 8);
+        let lightSphereGeometry = new THREE.SphereGeometry(0.1, 16, 16);
         let lightSphereMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
         let lightSphere = new THREE.Mesh(lightSphereGeometry, lightSphereMaterial);
         scene.add(lightSphere);
-        let radius = 18; // 회전 반경
+        let radius = 8; // 회전 반경
 
         // 카메라 위치 조정
         camera.position.z = 5;
