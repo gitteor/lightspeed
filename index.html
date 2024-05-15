@@ -20,24 +20,30 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
+        // 씬에 조명 추가
+        let ambientLight = new THREE.AmbientLight(0x404040); // 약간의 주변광
+        scene.add(ambientLight);
+        let pointLight = new THREE.PointLight(0xffffff, 1, 100); // 밝은 점광원
+        pointLight.position.set(0, 0, 5); // 카메라 뒤에 조명 위치
+        scene.add(pointLight);
+
         // 텍스처 로더 설정
         let loader = new THREE.TextureLoader();
 
         // 지구 생성
         loader.load('https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg', function(texture) {
             let geometry = new THREE.SphereGeometry(1, 32, 32);
-            let material = new THREE.MeshBasicMaterial({ map: texture });
+            let material = new THREE.MeshPhongMaterial({ map: texture });
             let earth = new THREE.Mesh(geometry, material);
-            earth.position.x = 2; // 지구를 오른쪽으로 이동
-            scene.add(earth);
+            scene.add(earth); // 지구를 중심으로 배치
         });
 
         // 태양 생성
         loader.load('https://threejs.org/examples/textures/planets/2k_sun.jpg', function(texture) {
             let geometry = new THREE.SphereGeometry(1.5, 32, 32);
-            let material = new THREE.MeshBasicMaterial({ map: texture, emissive: 0xFFFF00 });
+            let material = new THREE.MeshPhongMaterial({ map: texture, emissive: 0xffff00 });
             let sun = new THREE.Mesh(geometry, material);
-            sun.position.x = -2; // 태양을 왼쪽으로 이동
+            sun.position.x = -3; // 태양을 왼쪽으로 이동
             scene.add(sun);
         });
 
