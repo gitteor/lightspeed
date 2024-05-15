@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Solar System</title>
+    <title>Simple Solar System</title>
     <style>
         body { margin: 0; overflow: hidden; }
         canvas { display: block; }
@@ -20,11 +20,12 @@
         document.body.appendChild(renderer.domElement);
 
         // 조명 추가
-        let ambientLight = new THREE.AmbientLight(0x404040); // 주변광
+        let light = new THREE.PointLight(0xffffff, 1.2);
+        light.position.set(0, 0, 10);
+        scene.add(light);
+
+        let ambientLight = new THREE.AmbientLight(0x404040);
         scene.add(ambientLight);
-        let pointLight = new THREE.PointLight(0xffffff, 1, 100); // 강한 점광원
-        pointLight.position.set(5, 0, 25); // 태양 뒤쪽에서 빛나도록 설정
-        scene.add(pointLight);
 
         // 텍스처 로더 설정
         let loader = new THREE.TextureLoader();
@@ -34,29 +35,30 @@
             let geometry = new THREE.SphereGeometry(1, 32, 32);
             let material = new THREE.MeshPhongMaterial({ map: texture });
             let earth = new THREE.Mesh(geometry, material);
-            earth.position.x = 2; // 지구를 오른쪽으로 이동
+            earth.position.x = -2;
             scene.add(earth);
         });
 
         // 태양 생성
         loader.load('https://threejs.org/examples/textures/planets/2k_sun.jpg', function(texture) {
-            let geometry = new THREE.SphereGeometry(1.5, 32, 32);
-            let material = new THREE.MeshPhongMaterial({ map: texture, emissive: 0xffff00 });
+            let geometry = new THREE.SphereGeometry(2, 32, 32);
+            let material = new THREE.MeshBasicMaterial({ map: texture });
             let sun = new THREE.Mesh(geometry, material);
-            sun.position.x = -4; // 태양을 왼쪽으로 이동
+            sun.position.x = 3;
             scene.add(sun);
         });
 
         // 카메라 위치 조정
-        camera.position.set(0, 0, 5); // 카메라를 중앙에 위치시키고 약간 뒤로
+        camera.position.z = 5;
 
-        // 렌더링 함수 정의
-        function render() {
+        // 렌더링 함수
+        function animate() {
+            requestAnimationFrame(animate);
             renderer.render(scene, camera);
         }
 
-        // 렌더링 시작
-        render();
+        // 애니메이션 시작
+        animate();
     </script>
 </body>
 </html>
