@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Earth</title>
+    <title>3D Earth with Orbiting Light</title>
     <style>
         body { margin: 0; overflow: hidden; }
         canvas { display: block; }
@@ -22,15 +22,23 @@
 
         // 지구 텍스처 로드
         let loader = new THREE.TextureLoader();
-        loader.load('https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg', function(texture) {
+        let earthTexture = 'https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg';
+        loader.load(earthTexture, function(texture) {
             let geometry = new THREE.SphereGeometry(1, 32, 32);
             let material = new THREE.MeshBasicMaterial({ map: texture });
             let earth = new THREE.Mesh(geometry, material);
             scene.add(earth);
         });
 
+        // 빛 구체 생성
+        let lightSphereGeometry = new THREE.SphereGeometry(0.1, 16, 16);
+        let lightSphereMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        let lightSphere = new THREE.Mesh(lightSphereGeometry, lightSphereMaterial);
+        scene.add(lightSphere);
+        let radius = 2; // 회전 반경
+
         // 카메라 위치 조정
-        camera.position.z = 3;
+        camera.position.z = 5;
 
         // OrbitControls 활성화
         let controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -38,8 +46,16 @@
         controls.dampingFactor = 0.05;
         controls.rotateSpeed = 0.7;
 
-        // 렌더링 함수 정의
+        // 렌더링 및 애니메이션 함수 정의
+        let clock = new THREE.Clock();
         function render() {
+            let delta = clock.getDelta(); // 시간 차이 측정
+            let angle = delta * 7.5 * 2 * Math.PI; // 1초에 7.5바퀴
+
+            // 빛 구체 회전 업데이트
+            lightSphere.position.x = Math.cos(angle) * radius;
+            lightSphere.position.z = Math.sin(angle) * radius;
+
             requestAnimationFrame(render);
             controls.update();
             renderer.render(scene, camera);
